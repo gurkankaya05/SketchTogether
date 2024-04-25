@@ -8,7 +8,7 @@ const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 const client = createClient(supabaseUrl!, supabaseAnonKey!);
 
-export const useChannel = (channel: string | string[]) => {
+export const useChannel = (channel: string | string[], customColor: string) => {
   const [broadcastChannel, setBroadcastChannel] = useState<any>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const drawingRef = useRef<DrawingBoardRef | null>(null);

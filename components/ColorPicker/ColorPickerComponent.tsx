@@ -9,10 +9,19 @@ import ColorPicker, {
   returnedResults,
 } from 'reanimated-color-picker';
 
-const ColorPickerComponent = () => {
-  const onSelectColor = useCallback((c: returnedResults) => {
-    console.log(c);
-  }, []);
+type ColorPickerComponentProps = {
+  onColorSelected: (hex: string) => void;
+};
+const ColorPickerComponent = (props: ColorPickerComponentProps) => {
+  const onSelectColor = useCallback(
+    (c: returnedResults) => {
+      if (!c) {
+        return;
+      }
+      return props.onColorSelected(c.hex);
+    },
+    [props.onColorSelected]
+  );
 
   return (
     <View>

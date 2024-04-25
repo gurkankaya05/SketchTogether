@@ -1,21 +1,16 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import BottomSheet, {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import ColorPickerComponent from '../ColorPicker/ColorPickerComponent';
 import CloseButton from './CloseButton';
 
 type BottomSheetComponentProps = {
   isVisible: boolean;
   onClose: () => void;
+  onColorSelected: (hex: string) => void;
 };
 const BottomSheetComponent = (props: BottomSheetComponentProps) => {
-  // ref
   const bottomSheetRef = useRef<BottomSheet>(null);
-  // variables
   const snapPoints = useMemo(() => ['30%'], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.expand();
@@ -51,7 +46,7 @@ const BottomSheetComponent = (props: BottomSheetComponentProps) => {
       backgroundStyle={{ backgroundColor: 'white' }}>
       <BottomSheetView style={styles.contentContainer}>
         <CloseButton onClose={handleClose} />
-        <ColorPickerComponent />
+        <ColorPickerComponent onColorSelected={props.onColorSelected} />
       </BottomSheetView>
     </BottomSheet>
   );

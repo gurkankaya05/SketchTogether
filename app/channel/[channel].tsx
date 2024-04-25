@@ -9,8 +9,13 @@ import ColorPickerIcon from '~/components/ColorpickerIcon/ColorPickerIcon';
 
 export default function Page() {
   const { channel } = useLocalSearchParams();
-  const { isConnected, drawingRef, onDrawingActive, onDrawingStart } = useChannel(channel);
+  const [customColor, setCustomColor] = useState<string>('#000');
+  const { isConnected, drawingRef, onDrawingActive, onDrawingStart } = useChannel(
+    channel,
+    customColor
+  );
   const [isBottomSheetVisible, setBottomSheetVisible] = useState<boolean>(false);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -20,6 +25,7 @@ export default function Page() {
             ref={drawingRef}
             onStart={onDrawingStart}
             onActive={onDrawingActive}
+            customColor={customColor}
           />
         )}
         <ColorPickerIcon onPress={() => setBottomSheetVisible(!isBottomSheetVisible)} />
@@ -27,6 +33,7 @@ export default function Page() {
           <BottomSheetComponent
             isVisible={isBottomSheetVisible}
             onClose={() => setBottomSheetVisible(false)}
+            onColorSelected={setCustomColor}
           />
         )}
       </View>
