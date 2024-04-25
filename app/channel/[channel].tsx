@@ -25,6 +25,7 @@ export default function Page() {
             ref={drawingRef}
             onStart={onDrawingStart}
             onActive={onDrawingActive}
+            color={customColor}
           />
         )}
         <ColorPickerIcon onPress={() => setBottomSheetVisible(!isBottomSheetVisible)} />

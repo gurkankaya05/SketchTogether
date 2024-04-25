@@ -3,8 +3,9 @@ import { useCallback, useImperativeHandle, useState } from 'react';
 
 export type DrawingBoardProps = {
   onStart: (x: number, y: number) => void;
-  onActive: (x1: number, y1: number, x2: number, y2: number) => void;
+  onActive: (x1: number, y1: number, x2: number, y2: number, color: string) => void;
   ref: React.ForwardedRef<DrawingBoardRef>;
+  color: string;
 };
 
 export type DrawingBoardRef = {
@@ -12,8 +13,8 @@ export type DrawingBoardRef = {
   receivedActive: (x1: number, y1: number, x2: number, y2: number, user: string) => void;
 };
 
-export const useDrawingBoardComponent = ({ ref, onActive, onStart }: DrawingBoardProps) => {
-  const [paths, setPaths] = useState<SkPath[]>([]);
+export const useDrawingBoardComponent = ({ ref, onActive, onStart, color }: DrawingBoardProps) => {
+  const [paths, setPaths] = useState<{ paths: SkPath; color: string }[]>([]);
   const [otherPaths, setOtherPaths] = useState<{ paths: SkPath[]; user: string; color: string }[]>(
     []
   );
@@ -62,28 +63,31 @@ export const useDrawingBoardComponent = ({ ref, onActive, onStart }: DrawingBoar
     });
   };
 
-  const onDrawingStart = useCallback((touchInfo: TouchInfo) => {
-    setPaths((old) => {
-      const { x, y } = touchInfo;
-      onStart(x, y);
-      const newPath = Skia.Path.Make();
-      newPath.moveTo(x, y);
-      return [...old, newPath];
-    });
-  }, []);
+  const onDrawingStart = useCallback(
+    (touchInfo: TouchInfo) => {
+      setPaths((oldPaths) => {
+        const { x, y } = touchInfo;
+        onStart(x, y);
+        const newPath = Skia.Path.Make();
+        newPath.moveTo(x, y);
+        return [...oldPaths, { paths: newPath, color: color }];
+      });
+    },
+    [color]
+  );
 
   const onDrawingActive = useCallback((touchInfo: TouchInfo) => {
-    setPaths((currentPaths) => {
+    setPaths((oldPaths) => {
       const { x, y } = touchInfo;
-      const currentPath = currentPaths[currentPaths.length - 1];
-      const lastPoint = currentPath.getLastPt();
+      const currentPath = oldPaths[oldPaths.length - 1];
+      const lastPoint = currentPath.paths.getLastPt();
       const xMid = (lastPoint.x + x) / 2;
       const yMid = (lastPoint.y + y) / 2;
 
-      onActive(lastPoint.x, lastPoint.y, xMid, yMid);
+      onActive(lastPoint.x, lastPoint.y, xMid, yMid, color);
 
-      currentPath.quadTo(lastPoint.x, lastPoint.y, xMid, yMid);
-      return [...currentPaths.slice(0, currentPaths.length - 1), currentPath];
+      currentPath.paths.quadTo(lastPoint.x, lastPoint.y, xMid, yMid);
+      return [...oldPaths.slice(0, oldPaths.length - 1), currentPath];
     });
   }, []);
 

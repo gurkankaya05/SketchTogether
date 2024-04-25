@@ -42,10 +42,10 @@ export const useChannel = (channel: string | string[], customColor: string) => {
       broadcastChannel.send({
         type: 'broadcast',
         event: 'start',
-        payload: { x, y, user: randomUsername, color: randomColor },
+        payload: { x, y, user: randomUsername, color: customColor }, // Renk bilgisini iletiyoruz
       });
     },
-    [broadcastChannel]
+    [broadcastChannel, customColor]
   );
 
   const onDrawingActive = useCallback(
@@ -53,10 +53,10 @@ export const useChannel = (channel: string | string[], customColor: string) => {
       broadcastChannel.send({
         type: 'broadcast',
         event: 'active',
-        payload: { x1, y1, x2, y2, user: randomUsername },
+        payload: { x1, y1, x2, y2, user: randomUsername, color: customColor }, // Renk bilgisini iletiyoruz
       });
     },
-    [broadcastChannel]
+    [broadcastChannel, customColor]
   );
 
   return {
