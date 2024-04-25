@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import DrawingBoardComponent from '~/components/DrawingBoard/DrawingBoardComponent';
 import { useChannel } from './hooks/useChannel';
@@ -25,7 +25,6 @@ export default function Page() {
             ref={drawingRef}
             onStart={onDrawingStart}
             onActive={onDrawingActive}
-            customColor={customColor}
           />
         )}
         <ColorPickerIcon onPress={() => setBottomSheetVisible(!isBottomSheetVisible)} />

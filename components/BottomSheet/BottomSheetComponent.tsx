@@ -30,12 +30,19 @@ const BottomSheetComponent = (props: BottomSheetComponentProps) => {
 
   const handleSheetChanges = useCallback(
     (index: number) => {
-      console.log('handleSheetChanges', index);
       if (index === -1) {
         props.onClose();
       }
     },
     [props.onClose]
+  );
+
+  const onColorSelected = useCallback(
+    (h: string) => {
+      props.onColorSelected(h);
+      handleClose();
+    },
+    [handleClose, props.onColorSelected]
   );
   return (
     <BottomSheet
@@ -46,7 +53,7 @@ const BottomSheetComponent = (props: BottomSheetComponentProps) => {
       backgroundStyle={{ backgroundColor: 'white' }}>
       <BottomSheetView style={styles.contentContainer}>
         <CloseButton onClose={handleClose} />
-        <ColorPickerComponent onColorSelected={props.onColorSelected} />
+        <ColorPickerComponent onColorSelected={onColorSelected} />
       </BottomSheetView>
     </BottomSheet>
   );
