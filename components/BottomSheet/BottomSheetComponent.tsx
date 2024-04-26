@@ -49,6 +49,7 @@ const BottomSheetComponent = (props: BottomSheetComponentProps) => {
       ref={bottomSheetRef}
       index={0}
       snapPoints={snapPoints}
+      enablePanDownToClose={true}
       onChange={handleSheetChanges}
       backgroundStyle={{ backgroundColor: 'white' }}>
       <BottomSheetView style={styles.contentContainer}>
